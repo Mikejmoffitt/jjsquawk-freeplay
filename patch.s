@@ -1,0 +1,36 @@
+	CPU 68000
+	PADDING OFF
+	ORG		$000000
+	BINCLUDE	"prg.orig"
+
+ROM_FREE = $0000C0
+	ORG	ROM_FREE
+LAST_ORG	:=	*
+
+; WANT_BLANDIA_MAP = 1
+
+IRQ_ACK_VBL = $E00000
+IRQ_ACK_SND = $F00000
+VREGS_BASE = $500000
+TIMER_BASE = $D00000
+SP_INIT = WRAM_BASE + $10000
+IRQ1_LOC = $0009D6
+IRQ2_LOC = $000946
+NO_IRQ_LOC = $000A06
+
+	ALIGN	2
+LAST_ORG	:=	*
+
+	INCLUDE		"blandia_map.s"
+	INCLUDE		"freeplay.s"
+
+; Show the story mode more often in attract mode!
+	ORG	$00724C
+	move.l	#$0050000, $5610(a5)
+	ORG	$00772E
+	cmpi.w	#3, 4(a6)
+
+	ORG	LAST_ORG
+	dc.b	"END!"
+	ALIGN	2
+LAST_ORG	:=	*
